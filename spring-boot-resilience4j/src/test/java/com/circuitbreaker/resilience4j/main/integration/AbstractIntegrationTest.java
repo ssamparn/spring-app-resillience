@@ -17,8 +17,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(classes = Resilience4jApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractIntegrationTest {
 
-    protected static final String BACKEND_A = "north-europe";
-    protected static final String BACKEND_B = "backend-b";
+    protected static final String NORTH_EUROPE = "north-europe";
+    protected static final String WEST_EUROPE = "backend-b";
 
     @Autowired
     protected CircuitBreakerRegistry circuitBreakerRegistry;
@@ -31,8 +31,8 @@ public abstract class AbstractIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        transitionToClosedState(BACKEND_A);
-        transitionToClosedState(BACKEND_B);
+        transitionToClosedState(NORTH_EUROPE);
+        transitionToClosedState(WEST_EUROPE);
     }
 
     protected void transitionToClosedState(String circuitBreakerName) {

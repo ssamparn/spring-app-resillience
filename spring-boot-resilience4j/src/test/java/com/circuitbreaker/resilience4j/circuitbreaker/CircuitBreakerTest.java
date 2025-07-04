@@ -12,34 +12,34 @@ public class CircuitBreakerTest extends AbstractCircuitBreakerTest {
 
     @Test
     public void shouldOpenBackendACircuitBreaker() {
-        Stream.rangeClosed(1,2).forEach((count) -> produceFailure(BACKEND_A));
+        Stream.rangeClosed(1,2).forEach((count) -> produceFailure(NORTH_EUROPE));
 
-        checkHealthStatus(BACKEND_A, CircuitBreaker.State.OPEN);
+        checkHealthStatus(NORTH_EUROPE, CircuitBreaker.State.OPEN);
     }
 
     @Test
     public void shouldCloseBackendACircuitBreaker() {
-        transitionToOpenState(BACKEND_A);
-        circuitBreakerRegistry.circuitBreaker(BACKEND_A).transitionToHalfOpenState();
+        transitionToOpenState(NORTH_EUROPE);
+        circuitBreakerRegistry.circuitBreaker(NORTH_EUROPE).transitionToHalfOpenState();
 
-        Stream.rangeClosed(1,3).forEach((count) -> produceSuccess(BACKEND_A));
-        checkHealthStatus(BACKEND_A, CircuitBreaker.State.CLOSED);
+        Stream.rangeClosed(1,3).forEach((count) -> produceSuccess(NORTH_EUROPE));
+        checkHealthStatus(NORTH_EUROPE, CircuitBreaker.State.CLOSED);
     }
 
     @Test
     public void shouldOpenBackendBCircuitBreaker() {
-        Stream.rangeClosed(1,2).forEach((count) -> produceFailure(BACKEND_B));
+        Stream.rangeClosed(1,2).forEach((count) -> produceFailure(WEST_EUROPE));
 
-        checkHealthStatus(BACKEND_B, CircuitBreaker.State.OPEN);
+        checkHealthStatus(WEST_EUROPE, CircuitBreaker.State.OPEN);
     }
 
     @Test
     public void shouldCloseBackendBCircuitBreaker() {
-        transitionToOpenState(BACKEND_B);
-        circuitBreakerRegistry.circuitBreaker(BACKEND_B).transitionToHalfOpenState();
+        transitionToOpenState(WEST_EUROPE);
+        circuitBreakerRegistry.circuitBreaker(WEST_EUROPE).transitionToHalfOpenState();
 
-        Stream.rangeClosed(1,3).forEach((count) -> produceSuccess(BACKEND_B));
-        checkHealthStatus(BACKEND_B, CircuitBreaker.State.CLOSED);
+        Stream.rangeClosed(1,3).forEach((count) -> produceSuccess(WEST_EUROPE));
+        checkHealthStatus(WEST_EUROPE, CircuitBreaker.State.CLOSED);
     }
 
     private void produceSuccess(String backend) {
