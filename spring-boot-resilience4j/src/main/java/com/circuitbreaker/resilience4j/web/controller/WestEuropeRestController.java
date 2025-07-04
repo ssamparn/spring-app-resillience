@@ -40,7 +40,7 @@ import static java.util.Arrays.asList;
 @RequestMapping("/backend-b")
 public class WestEuropeRestController {
 
-    private static final String BACKEND_B = "backend-b";
+    private static final String WEST_EUROPE = "backend-b";
 
     private final BackendService westEuropeService;
     private final CircuitBreaker circuitBreaker;
@@ -60,12 +60,12 @@ public class WestEuropeRestController {
                                     RateLimiterRegistry rateLimiterRegistry,
                                     TimeLimiterRegistry timeLimiterRegistry) {
         this.westEuropeService = westEuropeService;
-        this.circuitBreaker = circuitBreakerRegistry.circuitBreaker(BACKEND_B);
-        this.bulkhead = bulkheadRegistry.bulkhead(BACKEND_B);
-        this.threadPoolBulkhead = threadPoolBulkheadRegistry.bulkhead(BACKEND_B);
-        this.retry = retryRegistry.retry(BACKEND_B);
-        this.rateLimiter = rateLimiterRegistry.rateLimiter(BACKEND_B);
-        this.timeLimiter = timeLimiterRegistry.timeLimiter(BACKEND_B);
+        this.circuitBreaker = circuitBreakerRegistry.circuitBreaker(WEST_EUROPE);
+        this.bulkhead = bulkheadRegistry.bulkhead(WEST_EUROPE);
+        this.threadPoolBulkhead = threadPoolBulkheadRegistry.bulkhead(WEST_EUROPE);
+        this.retry = retryRegistry.retry(WEST_EUROPE);
+        this.rateLimiter = rateLimiterRegistry.rateLimiter(WEST_EUROPE);
+        this.timeLimiter = timeLimiterRegistry.timeLimiter(WEST_EUROPE);
         this.scheduledExecutorService = Executors.newScheduledThreadPool(3);
     }
 
