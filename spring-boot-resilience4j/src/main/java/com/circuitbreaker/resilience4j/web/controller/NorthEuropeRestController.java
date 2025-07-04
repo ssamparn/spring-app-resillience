@@ -18,7 +18,7 @@ public class NorthEuropeRestController {
     private final BackendService backendServiceA;
 
     @Autowired
-    public NorthEuropeRestController(@Qualifier("backendServiceA") BackendService backendServiceA) {
+    public NorthEuropeRestController(@Qualifier("northEuropeService") BackendService backendServiceA) {
         this.backendServiceA = backendServiceA;
     }
 

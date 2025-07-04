@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class BackendServiceB implements BackendService {
+public class WestEuropeService implements BackendService {
 
     @Override
     public String failure() {

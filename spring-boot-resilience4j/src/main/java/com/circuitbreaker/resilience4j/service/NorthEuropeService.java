@@ -25,7 +25,7 @@ import java.util.concurrent.TimeoutException;
  */
 
 @Service
-public class BackendServiceA implements BackendService {
+public class NorthEuropeService implements BackendService {
 
     private static final String BACKEND_A = "backend-a";
 

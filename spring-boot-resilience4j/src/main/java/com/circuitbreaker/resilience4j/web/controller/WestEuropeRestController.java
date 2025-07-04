@@ -52,7 +52,7 @@ public class WestEuropeRestController {
     private final ScheduledExecutorService scheduledExecutorService;
 
     @Autowired
-    public WestEuropeRestController(@Qualifier("backendServiceB") BackendService backendServiceB,
+    public WestEuropeRestController(@Qualifier("westEuropeService") BackendService backendServiceB,
                                     CircuitBreakerRegistry circuitBreakerRegistry,
                                     BulkheadRegistry bulkheadRegistry,
                                     ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry,
