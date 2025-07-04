@@ -15,80 +15,80 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/backend-a")
 public class NorthEuropeRestController {
 
-    private final BackendService backendServiceA;
+    private final BackendService northEuropeService;
 
     @Autowired
-    public NorthEuropeRestController(@Qualifier("northEuropeService") BackendService backendServiceA) {
-        this.backendServiceA = backendServiceA;
+    public NorthEuropeRestController(@Qualifier("northEuropeService") BackendService northEuropeService) {
+        this.northEuropeService = northEuropeService;
     }
 
     @GetMapping("/failure")
     public String failure() {
-        return backendServiceA.failure();
+        return northEuropeService.failure();
     }
 
     @GetMapping("/success")
     public String success() {
-        return backendServiceA.success();
+        return northEuropeService.success();
     }
 
     @GetMapping("/success-exception")
     public String successException() {
-        return backendServiceA.successException();
+        return northEuropeService.successException();
     }
 
     @GetMapping("/ignore")
     public String ignore() {
-        return backendServiceA.ignoreException();
+        return northEuropeService.ignoreException();
     }
 
     @GetMapping("/mono-success")
     public Mono<String> monoSuccess() {
-        return backendServiceA.monoSuccess();
+        return northEuropeService.monoSuccess();
     }
 
     @GetMapping("/mono-failure")
     public Mono<String> monoFailure() {
-        return backendServiceA.monoFailure();
+        return northEuropeService.monoFailure();
     }
 
     @GetMapping("/mono-timeout")
     public Mono<String> monoTimeout() {
-        return backendServiceA.monoTimeout();
+        return northEuropeService.monoTimeout();
     }
 
     @GetMapping("/flux-success")
     public Flux<String> fluxSuccess() {
-        return backendServiceA.fluxSuccess();
+        return northEuropeService.fluxSuccess();
     }
 
     @GetMapping("/flux-failure")
     public Flux<String> fluxFailure() {
-        return backendServiceA.fluxFailure();
+        return northEuropeService.fluxFailure();
     }
 
     @GetMapping("/flux-timeout")
     public Flux<String> fluxTimeout() {
-        return backendServiceA.fluxTimeout();
+        return northEuropeService.fluxTimeout();
     }
 
     @GetMapping("/future-success")
     public CompletableFuture<String> futureSuccess() {
-        return backendServiceA.futureSuccess();
+        return northEuropeService.futureSuccess();
     }
 
     @GetMapping("/future-failure")
     public CompletableFuture<String> futureFailure() {
-        return backendServiceA.futureFailure();
+        return northEuropeService.futureFailure();
     }
 
     @GetMapping("/future-timeout")
     public CompletableFuture<String> futureTimeout() {
-        return backendServiceA.futureTimeout();
+        return northEuropeService.futureTimeout();
     }
 
     @GetMapping("/fallback")
     public String failureWithFallback() {
-        return backendServiceA.failureWithFallback();
+        return northEuropeService.failureWithFallback();
     }
 }

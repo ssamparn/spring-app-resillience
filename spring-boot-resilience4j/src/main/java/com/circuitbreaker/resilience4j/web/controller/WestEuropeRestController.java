@@ -42,7 +42,7 @@ public class WestEuropeRestController {
 
     private static final String BACKEND_B = "backend-b";
 
-    private final BackendService backendServiceB;
+    private final BackendService westEuropeService;
     private final CircuitBreaker circuitBreaker;
     private final Bulkhead bulkhead;
     private final ThreadPoolBulkhead threadPoolBulkhead;
@@ -52,14 +52,14 @@ public class WestEuropeRestController {
     private final ScheduledExecutorService scheduledExecutorService;
 
     @Autowired
-    public WestEuropeRestController(@Qualifier("westEuropeService") BackendService backendServiceB,
+    public WestEuropeRestController(@Qualifier("westEuropeService") BackendService westEuropeService,
                                     CircuitBreakerRegistry circuitBreakerRegistry,
                                     BulkheadRegistry bulkheadRegistry,
                                     ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry,
                                     RetryRegistry retryRegistry,
                                     RateLimiterRegistry rateLimiterRegistry,
                                     TimeLimiterRegistry timeLimiterRegistry) {
-        this.backendServiceB = backendServiceB;
+        this.westEuropeService = westEuropeService;
         this.circuitBreaker = circuitBreakerRegistry.circuitBreaker(BACKEND_B);
         this.bulkhead = bulkheadRegistry.bulkhead(BACKEND_B);
         this.threadPoolBulkhead = threadPoolBulkheadRegistry.bulkhead(BACKEND_B);
@@ -71,22 +71,22 @@ public class WestEuropeRestController {
 
     @GetMapping("/failure")
     public String failure() {
-        return execute(backendServiceB::failure);
+        return execute(westEuropeService::failure);
     }
 
     @GetMapping("/success")
     public String success() {
-        return execute(backendServiceB::success);
+        return execute(westEuropeService::success);
     }
 
     @GetMapping("/success-exception")
     public String successException() {
-        return execute(backendServiceB::successException);
+        return execute(westEuropeService::successException);
     }
 
     @GetMapping("/ignore")
     public String ignore() {
-        return Decorators.ofSupplier(backendServiceB::ignoreException)
+        return Decorators.ofSupplier(westEuropeService::ignoreException)
                 .withCircuitBreaker(circuitBreaker)
                 .withBulkhead(bulkhead)
                 .get();
@@ -94,42 +94,42 @@ public class WestEuropeRestController {
 
     @GetMapping("/mono-success")
     public Mono<String> monoSuccess() {
-        return execute(backendServiceB::monoSuccess);
+        return execute(westEuropeService::monoSuccess);
     }
 
     @GetMapping("/mono-failure")
     public Mono<String> monoFailure() {
-        return execute(backendServiceB::monoFailure);
+        return execute(westEuropeService::monoFailure);
     }
 
     @GetMapping("/mono-timeout")
     public Mono<String> monoTimeout() {
-        return executeWithFallback(backendServiceB.monoTimeout(), this::monoFallback);
+        return executeWithFallback(westEuropeService.monoTimeout(), this::monoFallback);
     }
 
     @GetMapping("/flux-success")
     public Flux<String> fluxSuccess() {
-        return execute(backendServiceB::fluxSuccess);
+        return execute(westEuropeService::fluxSuccess);
     }
 
     @GetMapping("/flux-failure")
     public Flux<String> fluxFailure() {
-        return execute(backendServiceB::fluxFailure);
+        return execute(westEuropeService::fluxFailure);
     }
 
     @GetMapping("/flux-timeout")
     public Flux<String> fluxTimeout() {
-        return executeWithFallback(backendServiceB.fluxTimeout(), this::fluxFallback);
+        return executeWithFallback(westEuropeService.fluxTimeout(), this::fluxFallback);
     }
 
     @GetMapping("/future-success")
     public CompletableFuture<String> futureSuccess() {
-        return executeAsync(backendServiceB::success);
+        return executeAsync(westEuropeService::success);
     }
 
     @GetMapping("/future-failure")
     public CompletableFuture<String> futureFailure() {
-        return executeAsync(backendServiceB::failure);
+        return executeAsync(westEuropeService::failure);
     }
 
     @GetMapping("/future-timeout")
@@ -139,7 +139,7 @@ public class WestEuropeRestController {
 
     @GetMapping("/fallback")
     public String failureWithFallback() {
-        return backendServiceB.failureWithFallback();
+        return westEuropeService.failureWithFallback();
     }
 
     private String timeout(){
