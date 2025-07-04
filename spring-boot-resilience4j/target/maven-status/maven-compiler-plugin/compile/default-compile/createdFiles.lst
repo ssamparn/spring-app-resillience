@@ -1,8 +1,0 @@
-com/circuitbreaker/resilience4j/web/controller/RestControllerA.class
-com/circuitbreaker/resilience4j/service/BackendService.class
-com/circuitbreaker/resilience4j/Resilience4jApplication.class
-com/circuitbreaker/resilience4j/exception/BusinessException.class
-com/circuitbreaker/resilience4j/service/BackendServiceB.class
-com/circuitbreaker/resilience4j/exception/RecordFailurePredicate.class
-com/circuitbreaker/resilience4j/service/BackendServiceA.class
-com/circuitbreaker/resilience4j/web/controller/RestControllerB.class

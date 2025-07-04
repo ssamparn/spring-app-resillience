@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.circuitbreaker.resilience4j.circuitbreaker.CircuitBreakerTest
--------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.682 s - in com.circuitbreaker.resilience4j.circuitbreaker.CircuitBreakerTest
