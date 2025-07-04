@@ -17,7 +17,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(classes = Resilience4jApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractIntegrationTest {
 
-    protected static final String BACKEND_A = "backend-a";
+    protected static final String BACKEND_A = "north-europe";
     protected static final String BACKEND_B = "backend-b";
 
     @Autowired

@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/backend-a")
+@RequestMapping("/north-europe")
 public class NorthEuropeRestController {
 
     private final BackendService northEuropeService;

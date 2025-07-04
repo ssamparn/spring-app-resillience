@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 @Service
 public class NorthEuropeService implements BackendService {
 
-    private static final String NORTH_EUROPE = "backend-a";
+    private static final String NORTH_EUROPE = "north-europe";
 
     @Override
     @CircuitBreaker(name = NORTH_EUROPE)

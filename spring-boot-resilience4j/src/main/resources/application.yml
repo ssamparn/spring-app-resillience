@@ -50,7 +50,7 @@ resilience4j.circuitbreaker:
       ignore-exceptions:
         - com.circuitbreaker.resilience4j.exception.BusinessException
   instances:
-    backendA:
+    north-europe:
       base-config: default
     backendB:
       register-health-indicator: true
@@ -76,7 +76,7 @@ resilience4j.retry:
       ignore-exceptions:
         - com.circuitbreaker.resilience4j.exception.BusinessException
   instances:
-    backendA:
+    north-europe:
       base-config: default
     backendB:
       base-config: default
@@ -86,7 +86,7 @@ resilience4j.bulkhead:
     default:
       max-concurrent-calls: 100
   instances:
-    backendA:
+    north-europe:
       max-concurrent-calls: 10
     backendB:
       max-wait-duration:
@@ -100,7 +100,7 @@ resilience4j.thread-pool-bulkhead:
       core-thread-pool-size: 2
       queue-capacity: 2
   instances:
-    backendA:
+    north-europe:
       base-config: default
     backendB:
       max-thread-pool-size: 1
@@ -118,7 +118,7 @@ resilience4j.ratelimiter:
         seconds: 0
       event-consumer-buffer-size: 100
   instances:
-    backendA:
+    north-europe:
       base-config: default
     backendB:
       limit-for-period: 6
@@ -134,7 +134,7 @@ resilience4j.timelimiter:
       timeout-duration:
         seconds: 2
   instances:
-    backendA:
+    north-europe:
       base-config: default
     backendB:
       base-config: default
