@@ -1,130 +1,140 @@
 spring:
-    application:
-        name: resilience-4-java
-    jackson:
-        serialization:
-            indent_output: true
+  application:
+    name: resilience-4-java
+  jackson:
+    serialization:
+      indent_output: true
 
 server:
-    port: 8080
+  port: 8080
 
 management:
-    endpoints.web.exposure.include: health,info,prometheus
-    endpoint:
-        metrics:
-            enabled: true
-        prometheus:
-            enabled: true
-        health:
-            show-details: always
+  endpoints.web.exposure.include: health,info,prometheus
+  endpoint:
+    metrics:
+        access: unrestricted
+    prometheus:
+        access: unrestricted
     health:
-        diskspace.enabled: false
-        circuitbreakers.enabled: true
-        ratelimiters.enabled: false
+      show-details: always
+  health:
+    diskspace.enabled: false
+    circuitbreakers.enabled: true
+    ratelimiters.enabled: false
 
 resilience4j.circuitbreaker:
-    configs:
-        default:
-            registerHealthIndicator: true
-            slidingWindowSize: 10
-            minimumNumberOfCalls: 5
-            permittedNumberOfCallsInHalfOpenState: 3
-            automaticTransitionFromOpenToHalfOpenEnabled: true
-            waitDurationInOpenState: 5s
-            failureRateThreshold: 50
-            eventConsumerBufferSize: 10
-            recordExceptions:
-                - org.springframework.web.client.HttpServerErrorException
-                - java.util.concurrent.TimeoutException
-                - java.io.IOException
-            ignoreExceptions:
-                - com.circuitbreaker.resilience4j.exception.BusinessException
-        shared:
-            slidingWindowSize: 100
-            permittedNumberOfCallsInHalfOpenState: 30
-            waitDurationInOpenState: 1s
-            failureRateThreshold: 50
-            eventConsumerBufferSize: 10
-            ignoreExceptions:
-                - com.circuitbreaker.resilience4j.exception.BusinessException
-    instances:
-        backendA:
-            baseConfig: default
-        backendB:
-            registerHealthIndicator: true
-            slidingWindowSize: 10
-            minimumNumberOfCalls: 10
-            permittedNumberOfCallsInHalfOpenState: 3
-            waitDurationInOpenState: 5s
-            failureRateThreshold: 50
-            eventConsumerBufferSize: 10
-            recordFailurePredicate: com.circuitbreaker.resilience4j.exception.RecordFailurePredicate
+  configs:
+    default:
+      register-health-indicator: true
+      sliding-window-size: 10
+      minimum-number-of-calls: 5
+      permitted-number-of-calls-in-half-open-state: 3
+      automatic-transition-from-open-to-half-open-enabled: true
+      wait-duration-in-open-state:
+        seconds: 5
+      failure-rate-threshold: 50
+      event-consumer-buffer-size: 10
+      record-exceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignore-exceptions:
+        - com.circuitbreaker.resilience4j.exception.BusinessException
+    shared:
+      sliding-window-size: 100
+      permitted-number-of-calls-in-half-open-state: 30
+      wait-duration-in-open-state:
+        seconds: 1
+      failure-rate-threshold: 50
+      event-consumer-buffer-size: 10
+      ignore-exceptions:
+        - com.circuitbreaker.resilience4j.exception.BusinessException
+  instances:
+    backendA:
+      base-config: default
+    backendB:
+      register-health-indicator: true
+      sliding-window-size: 10
+      minimum-number-of-calls: 10
+      permitted-number-of-calls-in-half-open-state: 3
+      wait-duration-in-open-state:
+        seconds: 5
+      failure-rate-threshold: 50
+      event-consumer-buffer-size: 10
+      record-failure-predicate: com.circuitbreaker.resilience4j.exception.RecordFailurePredicate
 
 resilience4j.retry:
-    configs:
-        default:
-            maxRetryAttempts: 3
-            waitDuration: 100
-            retryExceptions:
-                - org.springframework.web.client.HttpServerErrorException
-                - java.util.concurrent.TimeoutException
-                - java.io.IOException
-            ignoreExceptions:
-                - com.circuitbreaker.resilience4j.exception.BusinessException
-    instances:
-        backendA:
-            baseConfig: default
-        backendB:
-            baseConfig: default
+  configs:
+    default:
+      max-attempts: 3
+      wait-duration:
+        seconds: 100
+      retry-exceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+      ignore-exceptions:
+        - com.circuitbreaker.resilience4j.exception.BusinessException
+  instances:
+    backendA:
+      base-config: default
+    backendB:
+      base-config: default
 
 resilience4j.bulkhead:
-    configs:
-        default:
-            maxConcurrentCalls: 100
-    instances:
-        backendA:
-            maxConcurrentCalls: 10
-        backendB:
-            maxWaitDuration: 10ms
-            maxConcurrentCalls: 20
+  configs:
+    default:
+      max-concurrent-calls: 100
+  instances:
+    backendA:
+      max-concurrent-calls: 10
+    backendB:
+      max-wait-duration:
+        nanos: 10000000
+      max-concurrent-calls: 20
 
 resilience4j.thread-pool-bulkhead:
-    configs:
-        default:
-            maxThreadPoolSize: 4
-            coreThreadPoolSize: 2
-            queueCapacity: 2
-    instances:
-        backendA:
-            baseConfig: default
-        backendB:
-            maxThreadPoolSize: 1
-            coreThreadPoolSize: 1
-            queueCapacity: 1
+  configs:
+    default:
+      max-thread-pool-size: 4
+      core-thread-pool-size: 2
+      queue-capacity: 2
+  instances:
+    backendA:
+      base-config: default
+    backendB:
+      max-thread-pool-size: 1
+      core-thread-pool-size: 1
+      queue-capacity: 1
 
 resilience4j.ratelimiter:
-    configs:
-        default:
-            registerHealthIndicator: false
-            limitForPeriod: 10
-            limitRefreshPeriod: 1s
-            timeoutDuration: 0
-            eventConsumerBufferSize: 100
-    instances:
-        backendA:
-            baseConfig: default
-        backendB:
-            limitForPeriod: 6
-            limitRefreshPeriod: 500ms
-            timeoutDuration: 3s
+  configs:
+    default:
+      register-health-indicator: false
+      limit-for-period: 10
+      limit-refresh-period:
+        seconds: 1
+      timeout-duration:
+        seconds: 0
+      event-consumer-buffer-size: 100
+  instances:
+    backendA:
+      base-config: default
+    backendB:
+      limit-for-period: 6
+      limit-refresh-period:
+        nanos: 500000000
+      timeout-duration:
+        seconds: 3
 
 resilience4j.timelimiter:
-    configs:
-        default:
-            cancelRunningFuture: false
-            timeoutDuration: 2s
-    instances:
-        backendA:
-            baseConfig: default
-        backendB:
-            baseConfig: default
+  configs:
+    default:
+      cancel-running-future: false
+      timeout-duration:
+        seconds: 2
+  instances:
+    backendA:
+      base-config: default
+    backendB:
+      base-config: default
