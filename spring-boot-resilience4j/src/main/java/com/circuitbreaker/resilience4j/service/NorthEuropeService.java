@@ -27,108 +27,108 @@ import java.util.concurrent.TimeoutException;
 @Service
 public class NorthEuropeService implements BackendService {
 
-    private static final String BACKEND_A = "backend-a";
+    private static final String NORTH_EUROPE = "backend-a";
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public String failure() {
         throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "This is a remote exception");
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public String success() {
         return "Successful response from backend A";
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
     public String successException() {
         throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "This is a remote client exception");
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
     public String ignoreException() {
         throw new BusinessException("This exception is ignored by the CircuitBreaker of backend A");
     }
 
     @Override
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public Mono<String> monoSuccess() {
         return Mono.just("Hello World Mono from backend A");
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public Mono<String> monoFailure() {
         return Mono.error(new IOException("BAM!"));
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A, fallbackMethod = "fallback")
+    @CircuitBreaker(name = NORTH_EUROPE, fallbackMethod = "fallback")
     public String failureWithFallback() {
         return failure();
     }
 
     @Override
-    @TimeLimiter(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A, fallbackMethod = "monoFallback")
+    @TimeLimiter(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE, fallbackMethod = "monoFallback")
     public Mono<String> monoTimeout() {
         return Mono.just("Hello World from backend A")
                 .delayElement(Duration.ofSeconds(10));
     }
 
     @Override
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public Flux<String> fluxSuccess() {
         return Flux.just("Hello", "World");
     }
 
     @Override
-    @CircuitBreaker(name = BACKEND_A)
-    @Bulkhead(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Bulkhead(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public Flux<String> fluxFailure() {
         return Flux.error(new IOException("BAM!"));
     }
 
     @Override
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A, fallbackMethod = "fluxFallback")
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE, fallbackMethod = "fluxFallback")
     public Flux<String> fluxTimeout() {
         return Flux.just("Hello World from backend A")
                 .delayElements(Duration.ofSeconds(10));
     }
 
     @Override
-    @Bulkhead(name = BACKEND_A, type = Bulkhead.Type.THREADPOOL)
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @Bulkhead(name = NORTH_EUROPE, type = Bulkhead.Type.THREADPOOL)
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public CompletableFuture<String> futureSuccess() {
         return CompletableFuture.completedFuture("Hello World from backend A");
     }
 
     @Override
-    @Bulkhead(name = BACKEND_A, type = Bulkhead.Type.THREADPOOL)
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A)
-    @Retry(name = BACKEND_A)
+    @Bulkhead(name = NORTH_EUROPE, type = Bulkhead.Type.THREADPOOL)
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE)
+    @Retry(name = NORTH_EUROPE)
     public CompletableFuture<String> futureFailure() {
         CompletableFuture<String> future = new CompletableFuture<>();
         future.completeExceptionally(new IOException("BAM!"));
@@ -136,9 +136,9 @@ public class NorthEuropeService implements BackendService {
     }
 
     @Override
-    @Bulkhead(name = BACKEND_A, type = Bulkhead.Type.THREADPOOL)
-    @TimeLimiter(name = BACKEND_A)
-    @CircuitBreaker(name = BACKEND_A, fallbackMethod = "futureFallback")
+    @Bulkhead(name = NORTH_EUROPE, type = Bulkhead.Type.THREADPOOL)
+    @TimeLimiter(name = NORTH_EUROPE)
+    @CircuitBreaker(name = NORTH_EUROPE, fallbackMethod = "futureFallback")
     public CompletableFuture<String> futureTimeout() {
         Try.run(() -> Thread.sleep(5000));
         return CompletableFuture.completedFuture("Hello World from backend A");
