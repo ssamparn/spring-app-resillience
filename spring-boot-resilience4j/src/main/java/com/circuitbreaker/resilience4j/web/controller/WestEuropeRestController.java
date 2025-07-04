@@ -38,7 +38,7 @@ import static java.util.Arrays.asList;
 
 @RestController
 @RequestMapping("/backend-b")
-public class RestControllerB {
+public class WestEuropeRestController {
 
     private static final String BACKEND_B = "backend-b";
 
@@ -52,13 +52,13 @@ public class RestControllerB {
     private final ScheduledExecutorService scheduledExecutorService;
 
     @Autowired
-    public RestControllerB(@Qualifier("backendServiceB") BackendService backendServiceB,
-                           CircuitBreakerRegistry circuitBreakerRegistry,
-                           BulkheadRegistry bulkheadRegistry,
-                           ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry,
-                           RetryRegistry retryRegistry,
-                           RateLimiterRegistry rateLimiterRegistry,
-                           TimeLimiterRegistry timeLimiterRegistry) {
+    public WestEuropeRestController(@Qualifier("backendServiceB") BackendService backendServiceB,
+                                    CircuitBreakerRegistry circuitBreakerRegistry,
+                                    BulkheadRegistry bulkheadRegistry,
+                                    ThreadPoolBulkheadRegistry threadPoolBulkheadRegistry,
+                                    RetryRegistry retryRegistry,
+                                    RateLimiterRegistry rateLimiterRegistry,
+                                    TimeLimiterRegistry timeLimiterRegistry) {
         this.backendServiceB = backendServiceB;
         this.circuitBreaker = circuitBreakerRegistry.circuitBreaker(BACKEND_B);
         this.bulkhead = bulkheadRegistry.bulkhead(BACKEND_B);

@@ -13,12 +13,12 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/backend-a")
-public class RestControllerA {
+public class NorthEuropeRestController {
 
     private final BackendService backendServiceA;
 
     @Autowired
-    public RestControllerA(@Qualifier("backendServiceA") BackendService backendServiceA) {
+    public NorthEuropeRestController(@Qualifier("backendServiceA") BackendService backendServiceA) {
         this.backendServiceA = backendServiceA;
     }
 
