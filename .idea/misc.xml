@@ -5,6 +5,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/active-passive-setup/active-passive-api/pom.xml" />
+        <option value="$PROJECT_DIR$/active-passive-setup/active-passive-client/pom.xml" />
       </list>
     </option>
   </component>

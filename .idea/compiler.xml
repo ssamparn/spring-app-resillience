@@ -9,11 +9,23 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-boot-resilience4j" />
       </profile>
+      <profile name="Annotation profile for Spring App Resilience - Parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="active-passive-api" />
+        <module name="active-passive-client" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="active-passive-api" options="-parameters" />
+      <module name="active-passive-client" options="-parameters" />
       <module name="spring-boot-resilience4j" options="-parameters" />
     </option>
   </component>
