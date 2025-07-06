@@ -1,6 +1,7 @@
 package org.example.activepassiveapi.controller;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.activepassiveapi.model.Customer;
 import org.example.activepassiveapi.service.CustomerService;
@@ -27,39 +28,42 @@ public class CustomerController {
     }
 
     @GetMapping("/all")
-    @CircuitBreaker(name = "customerService", fallbackMethod = "getAllPassive")
+    @CircuitBreaker(name = "customer-service", fallbackMethod = "getAllPassive")
+    @TimeLimiter(name = "customer-service")
     public Flux<Customer> getAllCustomers() {
-        log.info("getAllActive");
+        log.info("get-customers-from-active-instances");
         return customerService.getAllCustomersFromActive();
     }
 
     @GetMapping("/{customerId}")
-    @CircuitBreaker(name = "customerService", fallbackMethod = "getByIdPassive")
+    @CircuitBreaker(name = "customer-service", fallbackMethod = "getByIdPassive")
     public Mono<Customer> getCustomerById(@PathVariable String customerId) {
         return customerService.getByCustomerByIdFromActive(customerId);
     }
 
     @PostMapping
-    @CircuitBreaker(name = "customerService", fallbackMethod = "createPassive")
+    @CircuitBreaker(name = "customer-service", fallbackMethod = "createPassive")
     public Mono<Customer> createNewCustomer(@RequestBody Customer customer) {
         return customerService.createCustomerInActive(customer);
     }
 
     @PutMapping("/{customerId}")
-    @CircuitBreaker(name = "customerService", fallbackMethod = "updatePassive")
+    @CircuitBreaker(name = "customer-service", fallbackMethod = "updatePassive")
     public Mono<Customer> updateCustomer(@PathVariable String customerId, @RequestBody Customer customer) {
         return customerService.updateCustomerInActive(customerId, customer);
     }
 
     @DeleteMapping("/{customerId}")
-    @CircuitBreaker(name = "customerService", fallbackMethod = "deletePassive")
+    @CircuitBreaker(name = "customer-service", fallbackMethod = "deletePassive")
     public Mono<Void> deleteCustomer(@PathVariable String customerId) {
         return customerService.deleteCustomerFromActive(customerId);
     }
 
-    // Fallbacks
+    /**
+     * Fallbacks for circuit breaker or timeout
+     * */
     public Flux<Customer> getAllPassive(Throwable t) {
-        log.info("getAllPassive", t);
+        log.info("get-customers-from-passive-instances");
         return customerService.getAllCustomersFromPassive();
     }
 
@@ -79,4 +83,35 @@ public class CustomerController {
         return customerService.deleteCustomerFromPassive(customerId);
     }
 
+    /**
+     * Note: When you deploy “active” and “passive” controllers/services to separate servers (or regions),
+     * the fallback between them is not handled automatically by the fallbackMethod parameter of the Resilience4j @CircuitBreaker annotation.
+     * How fallbackMethod Works?
+     *   - The fallbackMethod in Resilience4j only handles local fallbacks.
+     *   - It is meant for methods within the same application (the same JVM process).
+     *   - When the main method fails, Resilience4j calls the fallback method in the same bean/controller.
+     * What Happens with Separate Deployments (to active endpoint in one server and passive endpoint in another server)?
+     *   - If you deploy your “active” and “passive” services on different servers/regions,
+     *     the fallbackMethod cannot magically call a method on another remote server.
+     *   - The fallback method will still execute locally — so, for real cross-region failover, the fallback method must make an HTTP (or gRPC, etc.) call to the passive service.
+     *
+     *   @CircuitBreaker(name = "active-instance", fallbackMethod = "callPassiveInstance")
+     *   public Mono<String> callActiveInstance(Mono<byte[]> dataMono) {
+     *      // calls active-instance endpoint (local or via WebClient)
+     *   }
+     *
+     *   public Mono<String> callPassiveInstance(Mono<byte[]> dataMono, Throwable t) {
+     *      // Here: Make an HTTP call to the service in passive region
+     *      return webClient.post()
+     *          .uri("https://passive-instance.example.com/api/sign/data")
+     *          .body(dataMono, byte[].class)
+     *          .retrieve()
+     *          .bodyToMono(String.class);
+     *   }
+     *
+     *   - The fallbackMethod makes a remote call to the passive service endpoint.
+     *   - This is how you achieve region-to-region failover.
+     *
+     *   User → [Active Service] --fails--> fallbackMethod() --calls--> [Passive Service on another server]
+     * */
 }

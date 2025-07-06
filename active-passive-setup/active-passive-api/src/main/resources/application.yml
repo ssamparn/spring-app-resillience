@@ -8,7 +8,7 @@ spring:
 resilience4j:
   circuitbreaker:
     instances:
-      customerService:
+      customer-service:
         register-health-indicator: true
         sliding-window-size: 5
         sliding-window-type: COUNT_BASED
@@ -20,3 +20,17 @@ resilience4j:
         event-consumer-buffer-size: 10
         record-exceptions:
           - java.lang.RuntimeException
+  timelimiter:
+    instances:
+      customer-service:
+        timeout-duration:
+          seconds: 10s
+
+
+# Note: In an active-passive setup, you generally do not need a circuit breaker configuration for the passive (standby) region (e.g., west-europe).
+# Typical pattern
+#  Active region (e.g., north-europe): Has a circuit breaker configured.
+#  If open, calls passive region.
+#
+#  Passive region (e.g., west-europe):
+#  Usually no circuit breaker. If passive fails, propagate error.

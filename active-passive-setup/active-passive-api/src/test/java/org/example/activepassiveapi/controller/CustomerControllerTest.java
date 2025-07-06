@@ -52,7 +52,7 @@ class CustomerControllerTest {
         customerRepository.save(customer1).subscribe();
         customerRepository.save(customer2).subscribe();
 
-        circuitBreakerRegistry.circuitBreaker("customerService").reset();
+        circuitBreakerRegistry.circuitBreaker("customer-service").reset();
     }
 
     @Test
@@ -68,17 +68,16 @@ class CustomerControllerTest {
                 .hasSize(2)
                 .contains(customer1, customer2);
 
-        assertThat(circuitBreakerRegistry.circuitBreaker("customerService").getState())
-                .isEqualTo(CircuitBreaker.State.CLOSED);
+        assertThat(circuitBreakerRegistry.circuitBreaker("customer-service").getState()).isEqualTo(CircuitBreaker.State.CLOSED);
         verify(customerService, times(1)).getAllCustomersFromActive();
         verify(customerService, never()).getAllCustomersFromPassive();
     }
 
     @Test
-    void testPassiveFallbackOnActiveFailure() {
+    void getAllCustomers_FromPassiveInstance_OnActiveFailure_Test() {
         // Simulate active always fails, passive returns one customer
         doReturn(Flux.error(new RuntimeException("Active failure"))).when(customerService).getAllCustomersFromActive();
-        doReturn(Flux.just(customer2)).when(customerService).getAllCustomersFromPassive();
+        doReturn(Flux.just(customer1, customer2)).when(customerService).getAllCustomersFromPassive();
 
         webTestClient.get()
                 .uri("/customers/all")
@@ -86,11 +85,30 @@ class CustomerControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(Customer.class)
-                .hasSize(1)
-                .contains(customer2);
+                .hasSize(2)
+                .contains(customer1, customer2);
 
-        assertThat(circuitBreakerRegistry.circuitBreaker("customerService").getState())
-                .isEqualTo(CircuitBreaker.State.CLOSED);
+        assertThat(circuitBreakerRegistry.circuitBreaker("customer-service").getState()).isEqualTo(CircuitBreaker.State.CLOSED);
+        verify(customerService, times(1)).getAllCustomersFromActive();
+        verify(customerService, times(1)).getAllCustomersFromPassive();
+    }
+
+    @Test
+    void getAllCustomers_FromPassiveInstance_OnActiveTimeOut_Test() {
+        // Simulate active always fails, passive returns one customer
+        doReturn(Flux.never()).when(customerService).getAllCustomersFromActive();
+        doReturn(Flux.just(customer1, customer2)).when(customerService).getAllCustomersFromPassive();
+
+        webTestClient.get()
+                .uri("/customers/all")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(Customer.class)
+                .hasSize(2)
+                .contains(customer1, customer2);
+
+        assertThat(circuitBreakerRegistry.circuitBreaker("customer-service").getState()).isEqualTo(CircuitBreaker.State.CLOSED);
         verify(customerService, times(1)).getAllCustomersFromActive();
         verify(customerService, times(1)).getAllCustomersFromPassive();
     }
@@ -108,12 +126,12 @@ class CustomerControllerTest {
                     .exchange();
         }
 
-        CircuitBreaker breaker = circuitBreakerRegistry.circuitBreaker("customerService");
+        CircuitBreaker breaker = circuitBreakerRegistry.circuitBreaker("customer-service");
         assertThat(breaker.getState()).isEqualTo(CircuitBreaker.State.OPEN);
 
         // Now, further calls should NOT call getAllActive (breaker is open), only fallback
         reset(customerService);
-        doReturn(Flux.just(customer1)).when(customerService).getAllCustomersFromPassive();
+        doReturn(Flux.just(customer1, customer2)).when(customerService).getAllCustomersFromPassive();
 
         webTestClient.get()
                 .uri("/customers/all")
@@ -121,14 +139,15 @@ class CustomerControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(Customer.class)
-                .hasSize(1)
-                .contains(customer1);
+                .hasSize(2)
+                .contains(customer1, customer2);
 
+        verify(customerService, times(1)).getAllCustomersFromActive();
         verify(customerService, times(1)).getAllCustomersFromPassive();
     }
 
     /**
-     * Needs work. Figure out circuit breaker does not transition from Open to Closed State
+     * Needs work. Figure out circuit breaker does not transition from OPEN to CLOSED State
      * */
     @Test
     @Disabled
@@ -144,7 +163,7 @@ class CustomerControllerTest {
                     .exchange();
         }
 
-        CircuitBreaker breaker = circuitBreakerRegistry.circuitBreaker("customerService");
+        CircuitBreaker breaker = circuitBreakerRegistry.circuitBreaker("customer-service");
         assertThat(breaker.getState()).isEqualTo(CircuitBreaker.State.OPEN);
 
         // Wait for waitDurationInOpenState (configured as 10s in yml) to allow half-open
